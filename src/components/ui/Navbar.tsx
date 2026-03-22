@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, Brain } from 'lucide-react';
+import { Search, Plus, Brain, LogOut } from 'lucide-react';
 import { useApp } from '../../store/AppContext';
+import { useAuth } from '../../store/useAuth';
 
 interface NavbarProps {
   onNewNote: () => void;
@@ -8,6 +9,7 @@ interface NavbarProps {
 
 export function Navbar({ onNewNote }: NavbarProps) {
   const { searchQuery, setSearchQuery } = useApp();
+  const { logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -58,10 +60,22 @@ export function Navbar({ onNewNote }: NavbarProps) {
         />
       </div>
 
-      <div style={{ marginLeft: 'auto' }}>
+      <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, alignItems: 'center' }}>
         <button className="btn-primary" onClick={onNewNote} style={{ height: 36, fontSize: 13 }}>
           <Plus size={14} />
           Nouvelle note
+        </button>
+        <button
+          className="btn-ghost"
+          onClick={() => {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+              logout();
+            }
+          }}
+          title="Déconnexion"
+          style={{ height: 36, fontSize: 13, padding: '0 10px' }}
+        >
+          <LogOut size={14} />
         </button>
       </div>
     </nav>

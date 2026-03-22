@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AppProvider, useApp } from './store/AppContext';
+import { useAuth } from './store/useAuth';
 import { Navbar } from './components/ui/Navbar';
 import { Sidebar } from './components/ui/Sidebar';
 import { Dashboard } from './components/ui/Dashboard';
@@ -9,10 +10,16 @@ import { AIView } from './components/ai/AIView';
 import { FilesView } from './components/files/FilesView';
 import { ExportView } from './components/export/ExportView';
 import { NoteModal } from './components/notes/NoteModal';
+import { LoginPage } from './components/auth/LoginPage';
 
 function AppContent() {
+  const { isAuthenticated } = useAuth();
   const { currentView } = useApp();
   const [showNewNote, setShowNewNote] = useState(false);
+
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
   const cursorRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
 
