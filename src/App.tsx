@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { AppProvider, useApp } from './store/AppContext';
 import { useAuth } from './store/useAuth';
 import { Navbar } from './components/ui/Navbar';
@@ -11,6 +11,7 @@ import { FilesView } from './components/files/FilesView';
 import { ExportView } from './components/export/ExportView';
 import { NoteModal } from './components/notes/NoteModal';
 import { LoginPage } from './components/auth/LoginPage';
+import { CustomCursor } from './components/ui/CustomCursor';
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
@@ -18,33 +19,13 @@ function AppContent() {
   const [showNewNote, setShowNewNote] = useState(false);
 
   if (!isAuthenticated) {
-    return <LoginPage />;
+    return (
+      <>
+        <CustomCursor />
+        <LoginPage />
+      </>
+    );
   }
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
-
-  // Custom cursor
-  useEffect(() => {
-    const move = (e: MouseEvent) => {
-      if (cursorRef.current) {
-        cursorRef.current.style.left = `${e.clientX - 10}px`;
-        cursorRef.current.style.top = `${e.clientY - 10}px`;
-      }
-      if (dotRef.current) {
-        dotRef.current.style.left = `${e.clientX - 2}px`;
-        dotRef.current.style.top = `${e.clientY - 2}px`;
-      }
-    };
-    const enter = () => { if (cursorRef.current) cursorRef.current.style.transform = 'scale(1.8)'; };
-    const leave = () => { if (cursorRef.current) cursorRef.current.style.transform = 'scale(1)'; };
-
-    window.addEventListener('mousemove', move);
-    document.querySelectorAll('button, a, [role="button"]').forEach(el => {
-      el.addEventListener('mouseenter', enter);
-      el.addEventListener('mouseleave', leave);
-    });
-    return () => window.removeEventListener('mousemove', move);
-  }, []);
 
   const renderView = () => {
     switch (currentView) {
@@ -60,25 +41,7 @@ function AppContent() {
 
   return (
     <>
-      {/* Custom cursor */}
-      <div ref={cursorRef} style={{
-        width: 20, height: 20,
-        border: '1px solid rgba(255,255,255,0.5)',
-        borderRadius: '50%',
-        position: 'fixed',
-        pointerEvents: 'none',
-        zIndex: 99999,
-        transition: 'transform 150ms cubic-bezier(0.4,0,0.2,1)',
-        mixBlendMode: 'difference',
-      }} />
-      <div ref={dotRef} style={{
-        width: 4, height: 4,
-        background: 'white',
-        borderRadius: '50%',
-        position: 'fixed',
-        pointerEvents: 'none',
-        zIndex: 99999,
-      }} />
+      <CustomCursor />
 
       <Navbar onNewNote={() => setShowNewNote(true)} />
 
