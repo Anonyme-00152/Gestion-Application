@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppProvider, useApp } from './store/AppContext';
 import { useAuth } from './store/useAuth';
 import { Navbar } from './components/ui/Navbar';
@@ -17,6 +17,11 @@ function AppContent() {
   const { isAuthenticated } = useAuth();
   const { currentView } = useApp();
   const [showNewNote, setShowNewNote] = useState(false);
+
+  // Log pour débogage
+  useEffect(() => {
+    console.log('[App] État authentification:', isAuthenticated);
+  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return (
