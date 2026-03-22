@@ -128,6 +128,18 @@ export function useStore() {
     setAIMessages([]);
   }, []);
 
+  const importData = useCallback((importedNotes: Note[], mode: 'replace' | 'merge' = 'replace') => {
+    if (mode === 'replace') {
+      setNotes(importedNotes);
+    } else {
+      setNotes(prev => {
+        const existingIds = new Set(prev.map(n => n.id));
+        const newNotes = importedNotes.filter(n => !existingIds.has(n.id));
+        return [...prev, ...newNotes];
+      });
+    }
+  }, []);
+
   const getNotesForDate = useCallback((dateStr: string) => {
     return notes.filter(n => n.date === dateStr);
   }, [notes]);
@@ -168,5 +180,6 @@ export function useStore() {
     getNotesForDate,
     getTodayNotes,
     getFilteredNotes,
+    importData,
   };
 }

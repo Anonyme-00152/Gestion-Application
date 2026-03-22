@@ -9,6 +9,7 @@ import { CalendarView } from './components/calendar/CalendarView';
 import { AIView } from './components/ai/AIView';
 import { FilesView } from './components/files/FilesView';
 import { ExportView } from './components/export/ExportView';
+import { TransferView } from './components/transfer/TransferView';
 import { NoteModal } from './components/notes/NoteModal';
 import { LoginPage } from './components/auth/LoginPage';
 import { CustomCursor } from './components/ui/CustomCursor';
@@ -37,6 +38,7 @@ function AppContent() {
       case 'ai':        return <AIView />;
       case 'files':     return <FilesView />;
       case 'export':    return <ExportView />;
+      case 'transfer':  return <TransferView />;
       default:          return <Dashboard onNewNote={() => setShowNewNote(true)} />;
     }
   };

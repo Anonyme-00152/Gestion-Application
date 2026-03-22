@@ -41,4 +41,4 @@ export interface AIMessage {
   timestamp: string;
 }
 
-export type View = 'dashboard' | 'notes' | 'calendar' | 'ai' | 'files' | 'export';
+export type View = 'dashboard' | 'notes' | 'calendar' | 'ai' | 'files' | 'export' | 'transfer';

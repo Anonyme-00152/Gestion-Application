@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  LayoutDashboard, StickyNote, CalendarDays, Bot, FolderOpen, Download
+  LayoutDashboard, StickyNote, CalendarDays, Bot, FolderOpen, Download, ArrowRightLeft
 } from 'lucide-react';
 import { useApp } from '../../store/AppContext';
 import type { View } from '../../types';
@@ -12,6 +12,7 @@ const navItems: { id: View; label: string; icon: React.ReactNode; badge?: string
   { id: 'ai',         label: 'Assistant IA',icon: <Bot size={16} /> },
   { id: 'files',      label: 'Fichiers',    icon: <FolderOpen size={16} /> },
   { id: 'export',     label: 'Export',      icon: <Download size={16} /> },
+  { id: 'transfer',   label: 'Transfert',   icon: <ArrowRightLeft size={16} /> },
 ];
 
 export function Sidebar() {
