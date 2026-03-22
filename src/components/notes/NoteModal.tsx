@@ -51,6 +51,7 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
   const [coverImage, setCoverImage] = useState(note?.coverImage || '');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [selectedFilePreview, setSelectedFilePreview] = useState<NoteFile | null>(null);
 
   const handleSave = () => {
     if (!title.trim()) { setError('Le titre est requis.'); return; }
@@ -341,7 +342,11 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8, marginBottom: 10 }}>
                 {files.map(f => (
                   <div key={f.id} style={{ position: 'relative' }}>
-                    <div className="file-thumb">
+                    <div
+                      className="file-thumb"
+                      onClick={() => (f.type === 'image' || f.type === 'video') && setSelectedFilePreview(f)}
+                      style={{ cursor: (f.type === 'image' || f.type === 'video') ? 'pointer' : 'default' }}
+                    >
                       {f.type === 'image' && <img src={f.dataUrl} alt={f.name} />}
                       {f.type === 'video' && <video src={f.dataUrl} />}
                       {(f.type === 'document' || f.type === 'other') && (
@@ -388,6 +393,82 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
           </button>
         </div>
       </div>
+
+      {/* Lightbox de prévisualisation */}
+      {selectedFilePreview && (
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedFilePreview(null)}
+          style={{ zIndex: 1000 }}
+        >
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              animation: 'fadeUp 0.3s cubic-bezier(0.4,0,0.2,1)',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            {selectedFilePreview.type === 'image' && (
+              <img
+                src={selectedFilePreview.dataUrl}
+                alt={selectedFilePreview.name}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  borderRadius: 12,
+                  objectFit: 'contain',
+                }}
+              />
+            )}
+            {selectedFilePreview.type === 'video' && (
+              <video
+                src={selectedFilePreview.dataUrl}
+                controls
+                autoPlay
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  borderRadius: 12,
+                }}
+              />
+            )}
+            <button
+              onClick={() => setSelectedFilePreview(null)}
+              style={{
+                position: 'absolute',
+                top: -40,
+                right: 0,
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: 8,
+                color: 'white',
+                cursor: 'pointer',
+                padding: '8px 12px',
+                fontSize: 12,
+                fontWeight: 600,
+              }}
+            >
+              <X size={16} />
+            </button>
+            <div
+              style={{
+                marginTop: 16,
+                textAlign: 'center',
+                color: 'rgba(255,255,255,0.5)',
+                fontSize: 12,
+              }}
+            >
+              {selectedFilePreview.name}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
