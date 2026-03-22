@@ -344,8 +344,18 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
                   <div key={f.id} style={{ position: 'relative' }}>
                     <div
                       className="file-thumb"
-                      onClick={() => (f.type === 'image' || f.type === 'video') && setSelectedFilePreview(f)}
-                      style={{ cursor: (f.type === 'image' || f.type === 'video') ? 'pointer' : 'default' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (f.type === 'image' || f.type === 'video') {
+                          setSelectedFilePreview(f);
+                        }
+                      }}
+                      style={{ 
+                        cursor: (f.type === 'image' || f.type === 'video') ? 'pointer' : 'default',
+                        position: 'relative',
+                        zIndex: 10,
+                        pointerEvents: 'auto'
+                      }}
                     >
                       {f.type === 'image' && <img src={f.dataUrl} alt={f.name} />}
                       {f.type === 'video' && <video src={f.dataUrl} />}
@@ -397,9 +407,21 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
       {/* Lightbox de prévisualisation */}
       {selectedFilePreview && (
         <div
-          className="modal-overlay"
           onClick={() => setSelectedFilePreview(null)}
-          style={{ zIndex: 1000 }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.9)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 20,
+            cursor: 'zoom-out',
+            animation: 'fadeIn 0.2s ease',
+          }}
         >
           <div
             style={{
@@ -408,9 +430,9 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              maxWidth: '90vw',
-              maxHeight: '90vh',
-              animation: 'fadeUp 0.3s cubic-bezier(0.4,0,0.2,1)',
+              maxWidth: '95vw',
+              maxHeight: '95vh',
+              cursor: 'default',
             }}
             onClick={e => e.stopPropagation()}
           >
@@ -420,9 +442,11 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
                 alt={selectedFilePreview.name}
                 style={{
                   maxWidth: '100%',
-                  maxHeight: '100%',
+                  maxHeight: '85vh',
                   borderRadius: 12,
                   objectFit: 'contain',
+                  boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                  border: '1px solid rgba(255,255,255,0.1)',
                 }}
               />
             )}
@@ -433,39 +457,53 @@ export function NoteModal({ note, onClose, defaultDate }: NoteModalProps) {
                 autoPlay
                 style={{
                   maxWidth: '100%',
-                  maxHeight: '100%',
+                  maxHeight: '85vh',
                   borderRadius: 12,
+                  boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
                 }}
               />
             )}
+            
+            <div style={{
+              marginTop: 16,
+              padding: '8px 16px',
+              background: 'rgba(255,255,255,0.05)',
+              borderRadius: 20,
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: 13,
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8
+            }}>
+              <span style={{ opacity: 0.5 }}>{selectedFilePreview.type === 'image' ? '🖼️' : '🎬'}</span>
+              {selectedFilePreview.name}
+            </div>
+
             <button
               onClick={() => setSelectedFilePreview(null)}
               style={{
                 position: 'absolute',
-                top: -40,
+                top: -50,
                 right: 0,
                 background: 'rgba(255,255,255,0.1)',
                 border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: 8,
+                borderRadius: '50%',
                 color: 'white',
                 cursor: 'pointer',
-                padding: '8px 12px',
-                fontSize: 12,
-                fontWeight: 600,
+                width: 36,
+                height: 36,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 200ms',
               }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.2)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
             >
-              <X size={16} />
+              <X size={20} />
             </button>
-            <div
-              style={{
-                marginTop: 16,
-                textAlign: 'center',
-                color: 'rgba(255,255,255,0.5)',
-                fontSize: 12,
-              }}
-            >
-              {selectedFilePreview.name}
-            </div>
           </div>
         </div>
       )}
