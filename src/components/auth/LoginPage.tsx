@@ -9,16 +9,24 @@ export function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[LoginPage] Soumission du formulaire');
+    
     if (!username.trim() || !password.trim()) {
+      console.log('[LoginPage] Champs vides');
       setError('Veuillez remplir tous les champs.');
       return;
     }
+    
+    console.log('[LoginPage] Appel de login avec:', { username });
     login(username, password);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !loading) {
-      handleSubmit(e as any);
+    if (e.key === 'Enter') {
+      console.log('[LoginPage] Touche Entrée détectée');
+      if (!loading) {
+        handleSubmit(e as any);
+      }
     }
   };
 
@@ -129,10 +137,15 @@ export function LoginPage() {
               className="input-premium"
               placeholder="Entrez votre identifiant"
               value={username}
-              onChange={e => { setUsername(e.target.value); setError(''); }}
+              onChange={e => { 
+                setUsername(e.target.value); 
+                setError(''); 
+                console.log('[LoginPage] Identifiant changé:', e.target.value);
+              }}
               onKeyDown={handleKeyDown}
               disabled={loading}
               style={{ fontSize: 14, padding: '12px 14px' }}
+              autoComplete="username"
             />
           </div>
 
@@ -155,10 +168,15 @@ export function LoginPage() {
               className="input-premium"
               placeholder="Entrez votre mot de passe"
               value={password}
-              onChange={e => { setPassword(e.target.value); setError(''); }}
+              onChange={e => { 
+                setPassword(e.target.value); 
+                setError(''); 
+                console.log('[LoginPage] Mot de passe changé (', e.target.value.length, 'caractères)');
+              }}
               onKeyDown={handleKeyDown}
               disabled={loading}
               style={{ fontSize: 14, padding: '12px 14px' }}
+              autoComplete="current-password"
             />
           </div>
 
@@ -201,7 +219,7 @@ export function LoginPage() {
         }}>
           Vos identifiants personnalisés vous ont été fournis.<br />
           <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: 10 }}>
-            Mot de passe sécurisé par hachage SHA-256
+            Ouvrez la console (F12) pour voir les logs de débogage
           </span>
         </div>
       </div>
