@@ -195,13 +195,13 @@ export function LoginPage() {
         {/* Hint */}
         <div style={{
           fontSize: 11,
-          color: 'rgba(255,255,255,0.25)',
+          color: 'rgba(255,255,255,0.2)',
           textAlign: 'center',
           lineHeight: 1.6,
         }}>
-          Utilisez les identifiants par défaut :<br />
-          <span style={{ color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace' }}>
-            mindvault / SecurePass2026
+          Vos identifiants personnalisés vous ont été fournis.<br />
+          <span style={{ color: 'rgba(255,255,255,0.15)', fontSize: 10 }}>
+            Mot de passe sécurisé par hachage SHA-256
           </span>
         </div>
       </div>
