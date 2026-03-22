@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AppProvider, useApp } from './store/AppContext';
 import { useAuth } from './store/useAuth';
 import { Navbar } from './components/ui/Navbar';
@@ -18,11 +18,7 @@ function AppContent() {
   const { currentView } = useApp();
   const [showNewNote, setShowNewNote] = useState(false);
 
-  // Log pour débogage
-  useEffect(() => {
-    console.log('[App] État authentification:', isAuthenticated);
-  }, [isAuthenticated]);
-
+  // Si pas authentifié, afficher la page de login
   if (!isAuthenticated) {
     return (
       <>
@@ -32,6 +28,7 @@ function AppContent() {
     );
   }
 
+  // Sinon, afficher l'application complète
   const renderView = () => {
     switch (currentView) {
       case 'dashboard': return <Dashboard onNewNote={() => setShowNewNote(true)} />;
@@ -47,7 +44,6 @@ function AppContent() {
   return (
     <>
       <CustomCursor />
-
       <Navbar onNewNote={() => setShowNewNote(true)} />
 
       <div style={{
@@ -56,7 +52,6 @@ function AppContent() {
         paddingTop: 60,
         background: '#0A0A0A',
       }}>
-        {/* Background gradient */}
         <div style={{
           position: 'fixed',
           inset: 0,
